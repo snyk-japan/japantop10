@@ -9,6 +9,10 @@ const _ = require('lodash');
 const csrf = require('csurf');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
+const parseURL = require('url').parse;
+const fs = require('fs');
+const http = require('http');
+const path = require('path');
 
 // setup route middlewares
 //const csrfProtection = csrf({ cookie: true });
@@ -53,8 +57,21 @@ app.post('/api/save', express.json(), function (req, res) {
 
 app.get('/', async (req, res) => {
     const boards = await db.Board.find(); //load previous games
-    res.cookie('gameId', Math.random(),{httpOnly:false});
+    res.cookie('gameId', Math.random(), {httpOnly: false});
     res.render('index', {board: [], player: 'X\'s turn', boards: boards});
+});
+
+app.get('/images', async (req, res) => {
+    const absoluteFilePath = path.join(__dirname, "/images");
+    const fileName = req.query.file;
+    fs.readFile( path.resolve(absoluteFilePath, fileName), (err, data) => {
+        if (err) {
+            res.writeHead(404);
+            res.end(JSON.stringify(err));
+            return;
+        }
+        res.end(data);
+    });
 });
 
 app.get('/board/:id', async (req, res) => {
