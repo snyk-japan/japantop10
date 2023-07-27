@@ -30,15 +30,15 @@ const User = mongoose.model('User', userSchema);
 checkAdmin();
 
 async function checkAdmin() {
-    var adminUser = await User.findOne({username: 'admin'});
+    var adminUser = await User.findOne({username: process.env.USERNAME});
     if (adminUser) {
         //clean up old admin user
         adminUser.deleteOne();
     }
 
     const newUser = new User({
-        username: 'admin',
-        password: bcrypt.hashSync( "snyk2023", 10)
+        username: process.env.USERNAME,
+        password: bcrypt.hashSync('snyk2023', 10)
     });
     newUser.save();
 
