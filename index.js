@@ -114,7 +114,8 @@ app.get('/login', (req, res) => {
 });
 app.get('/logout', function (req, res, next) {
     req.session.destroy();
-    res.redirect('/');
+    let redirectUrl = req.query.redirectUrl || '/';
+    res.redirect(redirectUrl);
 });
 
 app.post('/login', async function (req, res, next) {
