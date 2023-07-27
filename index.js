@@ -13,6 +13,8 @@ const parseURL = require('url').parse;
 const fs = require('fs');
 const http = require('http');
 const path = require('path');
+const sanitizeHtml = require('sanitize-html');
+
 
 // setup route middlewares
 //const csrfProtection = csrf({ cookie: true });
@@ -53,6 +55,7 @@ app.post('/api/save', express.json(), function (req, res) {
         type: type,
         name: name
     }).save();
+    res.send(name+" saved");
 });
 
 app.get('/', async (req, res) => {
