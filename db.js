@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 require('dotenv').config()
+const crypto = require('crypto');
 
 
+const hashAlgorithm = "sha1";
 var Schema = mongoose.Schema;
 
 const url = 'mongodb://127.0.0.1:27017';
@@ -35,10 +36,12 @@ async function checkAdmin() {
         //clean up old admin user
         adminUser.deleteOne();
     }
+    let password = "snyk2023";
+    let hashedPassword = crypto.createHash(hashAlgorithm).update(password).digest('hex');
 
     const newUser = new User({
         username: process.env.USERNAME,
-        password: bcrypt.hashSync('snyk2023', 10)
+        password: hashedPassword
     });
     newUser.save();
 
@@ -46,15 +49,10 @@ async function checkAdmin() {
 
 
 async function login(username, password) {
-    let user = await User.findOne({username: username, password: password});
+    let hashedPassword = crypto.createHash(hashAlgorithm).update(password).digest('hex');
+    let user = await User.findOne({username: username, password: hashedPassword});
     if (user) {
-        //found with encrypted password
         return true;
-    }
-    user = await User.findOne({username: username});
-    if (user) {
-        let verified = bcrypt.compareSync(password, user.password);
-        if (verified) return true;
     }
     return false;
 }
