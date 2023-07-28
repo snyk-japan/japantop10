@@ -10,11 +10,16 @@ const csrf = require('csurf');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const parseURL = require('url').parse;
-const fs = require('fs');
 const http = require('http');
 const path = require('path');
 const sanitizeHtml = require('sanitize-html');
+const https = require('https');
+const fs = require('fs');
 
+const options = {
+    key: fs.readFileSync('keys/privatekey.pem'),
+    cert: fs.readFileSync('keys/certificate.pem')
+};
 
 
 // Set up middleware
@@ -155,6 +160,9 @@ function requireAuth(req, res, next) {
         res.redirect('/login');
     }
 }
+
+// const server = https.createServer(options, app);
+// server.listen(3001, () => console.log('HTTPS Server running on port 3001'));
 
 app.listen(3001, () => console.log('Server started on port 3001'));
 
