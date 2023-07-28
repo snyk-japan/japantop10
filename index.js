@@ -16,8 +16,6 @@ const path = require('path');
 const sanitizeHtml = require('sanitize-html');
 
 
-// setup route middlewares
-//const csrfProtection = csrf({ cookie: true });
 
 // Set up middleware
 app.use(session({
@@ -34,6 +32,16 @@ app.use(session({cookie: {}}));
 app.use(cookieParser());
 marked.setOptions({sanitize: true});
 app.locals.marked = marked;
+
+
+// setup csrf protection
+//app.use(csrf({ cookie: true }));
+// middleware to make csrfToken available to all views
+app.use((req, res, next) => {
+    res.locals.csrfToken = ""; //req.csrfToken()
+    //res.cookie('XSRF-TOKEN', req.csrfToken());
+    next();
+});
 
 // Enable rate limit for all requests
 const limiter = rateLimit({
@@ -86,11 +94,12 @@ app.get('/board/:id', async (req, res) => {
     res.render('index', {board: boarddata, player: loadboard.name + ' ' + newmessage, boards: boards});
 });
 
+
 app.get('/admin', requireAuth, async (req, res) => {
     // query the database to get all collections
     const boards = await db.Board.find();
     // render the collections in the EJS template
-    res.render('admin', {boards, csrfToken: ""/*req.csrfToken()*/});
+    res.render('admin', { boards });
 });
 
 app.post('/delete', requireAuth, async (req, res) => {

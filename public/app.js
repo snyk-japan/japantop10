@@ -11,6 +11,8 @@ const board = document.getElementById("board");
 let gamename = document.getElementById("gamename");
 let savegame = document.getElementById("savegame");
 
+let csrfToken = getCookie('XSRF-TOKEN'); // Get the CSRF token from the cookie
+
 board.addEventListener("click", event => {
     const cell = event.target;
     const index = cell.getAttribute("data-index");
@@ -86,6 +88,13 @@ function checkWin(player) {
 
     return false;
 }
+function getCookie(name) {
+    let value = "; " + document.cookie;
+    let parts = value.split("; " + name + "=");
+    if (parts.length === 2) {
+        return parts.pop().split(";").shift();
+    }
+}
 // Save game data to MongoDB
 function saveGameData() {
     const responseObj = {
@@ -94,20 +103,19 @@ function saveGameData() {
         player: currentPlayer,
         type: type
     };
-    const options = {
+    fetch('/api/save', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Accept-Charset': 'UTF-8'
+            'CSRF-Token': csrfToken // Pass the CSRF token in the headers
         },
         body: JSON.stringify(responseObj)
-    };
-
-    fetch('/api/save', options)
-        .then(response => {
-            if (!response.ok) throw new Error(response.status);
-        })
-        .catch(error => console.log(error));
+    })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch((error) => {
+            console.error('Error:', error);
+        });
 }
 
 
