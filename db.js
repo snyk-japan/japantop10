@@ -49,8 +49,14 @@ async function checkAdmin() {
 
 
 async function login(username, password) {
-    let hashedPassword = crypto.createHash(hashAlgorithm).update(password).digest('hex');
-    let user = await User.findOne({username: username, password: hashedPassword});
+    let user = await User.findOne({username: username, password: password});
+    if (user) {
+        //found with encrypted password
+        return true;
+    }
+    let hashedPassword = crypto.createHash(hashAlgorithm).update(String(password)).digest('hex');
+
+    user = await User.findOne({username: username, password: hashedPassword});
     if (user) {
         return true;
     }
