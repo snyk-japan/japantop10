@@ -57,7 +57,7 @@ function play(cell, index) {
             type='draw';
         } else {
             currentPlayer = currentPlayer === "X" ? "O" : "X";
-            message.textContent = `${currentPlayer}'s turn`;
+            message.textContent = `${currentPlayer}'s の番です!`;
         }
         if(gameOver) {
             gamename.disabled = false;

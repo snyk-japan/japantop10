@@ -74,7 +74,7 @@ app.post('/api/save', express.json(), function (req, res) {
 app.get('/', async (req, res) => {
     const boards = await db.Board.find(); //load previous games
     res.cookie('gameId', Math.random(), {httpOnly: false});
-    res.render('index', {board: [], player: 'X\'s turn', boards: boards});
+    res.render('index', {board: [], player: 'X\'s の番です！', boards: boards});
 });
 
 app.get('/images', async (req, res) => {

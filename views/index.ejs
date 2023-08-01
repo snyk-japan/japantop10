@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Tic Tac Toe</title>
+    <title>○×ゲーム</title>
     <link rel="stylesheet" type="text/css" href="/style.css">
 </head>
 <body>
@@ -11,7 +11,7 @@
         var loadboard = "<%= board %>";
     </script>
     <div style="text-align: center;">
-        <div><h1>Tic Tac Toe!</h1><a href="/">New Game</a><br/><a href="/admin">Admin</a><br/><a href="/public/rules.html">Rules</a></div>
+        <div><h1>○×ゲーム</h1><a href="/">新しいゲーム</a><br/><a href="/admin">管理者</a><br/><a href="/public/rules.html">ルール</a></div>
         <div id="board"></div>
         <div id="message" class="message"><%= player %></div>
         <br/>
@@ -24,7 +24,7 @@
             </div>
         </form>
         <br/>
-        <div><h3>Previous Games</h3></div>
+        <div><h3>以前のゲーム</h3></div>
         <div id="boards" class="boards"></div>
         <script src="/app.js"></script>
         <script>
